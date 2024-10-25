@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./TypingArea.css";
 
 function TypingArea() {
   const [userInput, setUserInput] = useState("");
   const [fileLink, setFileLink] = useState(""); // 파일 출처 링크
   const [codeToType, setCodeToType] = useState(""); // 따라칠 텍스트
+  const [isFinished, setIsFinished] = useState(false); // 타이핑 완료 여부
+  const [currentTime, setCurrentTime] = useState(0); // 현재 타이머 값
+  const [startTime, setStartTime] = useState(null); // 타이머 시작 시간
+  const timerRef = useRef(null); // useRef로 타이머 변수 선언
 
   // GitHub API에서 lodash 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async () => {
@@ -87,11 +91,22 @@ function TypingArea() {
   useEffect(() => {
     fetchJSFilesFromGithub(); // 컴포넌트가 처음 렌더링될 때 .js 파일을 가져옵니다.
   }, []);
-
+  /******************************************************************** */
   const handleInputChange = (e) => {
-    setUserInput(e.target.value);
+    const inputValue = e.target.value;
+    setUserInput(inputValue);
+    const cleanedCodeToType = codeToType.replace(/\s+/g, " ").trim();
+    if (!startTime) {
+      setStartTime(new Date().getTime()); // 첫 입력 시 타이머 시작
+    }
+    if (
+      userInput.length - 1 >= cleanedCodeToType.length &&
+      userInput.length > 0
+    ) {
+      setIsFinished(true);
+    }
   };
-
+  /******************************************************************** */
   const renderCode = () => {
     const cleanedCodeToType = codeToType.replace(/\s+/g, " ");
 
@@ -124,6 +139,36 @@ function TypingArea() {
       );
     });
   };
+  /******************************************************************** */
+  const handleKeyDown = (e) => {
+    // Tab 키 입력 시 공백 추가
+    if (e.key === "Tab") {
+      e.preventDefault();
+      setUserInput((prevInput) => prevInput + " ");
+    }
+
+    // Enter 키 입력 시 공백 추가
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setUserInput((prevInput) => prevInput + " ");
+    }
+  };
+
+  /******************************************************************** */
+  useEffect(() => {
+    // 타이머가 작동 중일 때
+    if (startTime && !isFinished) {
+      timerRef.current = setInterval(() => {
+        setCurrentTime((prevTime) => {
+          const updatedTime = (parseFloat(prevTime) || 0) + 0.1; // prevTime이 숫자가 아닐 경우 기본값 0
+          return updatedTime.toFixed(1); // 소수점 한 자리까지 표시
+        });
+      }, 100); // 0.1초마다 업데이트
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [startTime, isFinished]);
+  /******************************************************************** */
 
   return (
     <div className="typing-area">
@@ -133,7 +178,15 @@ function TypingArea() {
         placeholder="코드를 따라 입력하세요"
         value={userInput}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        autoComplete="off" // 자동 완성 비활성화
+        spellCheck="false" // 맞춤법 검사 비활성화
+        disabled={isFinished}
       />
+      <div>
+        <p>소요 시간: {currentTime} 초</p>
+        {isFinished && <p>타이핑 완료!</p>}
+      </div>
     </div>
   );
 }
