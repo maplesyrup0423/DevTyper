@@ -10,17 +10,29 @@ body {
   border-radius: 10px;
   padding: 20px;
 }
-h2 {
+h2,
+.footer {
   text-align: center;
 }
+h2 {
+  margin: 0px;
+}
+.refreshCodeSnippet {
+  text-align: right;
+}
+.refreshCodeSnippet span {
+  margin-right: 10px;
+}
 .code-container {
+  margin: 10px 0;
   margin-bottom: 10px;
+  white-space: pre-wrap;
   font-family: "Courier New", Courier, monospace;
   font-size: 25px;
   border: 1px solid #4caf50;
   color: lightgray;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px;
 }
 textarea {
@@ -29,11 +41,13 @@ textarea {
   color: white;
   border: 1px solid #4caf50;
   font-size: 15px;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px;
   box-sizing: border-box;
   resize: none;
   outline: none;
+  height: auto;
+  overflow: hidden;
 }
 
 button {
@@ -44,7 +58,21 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin: 5px;
 }
 button:hover {
   background-color: #45a049;
+}
+
+p {
+  margin: 5px 0;
+}
+
+a {
+  color: #4caf50;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
