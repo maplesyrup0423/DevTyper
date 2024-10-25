@@ -9,6 +9,8 @@ function TypingArea() {
   const [currentTime, setCurrentTime] = useState(0); // 현재 타이머 값
   const [startTime, setStartTime] = useState(null); // 타이머 시작 시간
   const timerRef = useRef(null); // useRef로 타이머 변수 선언
+  const [accuracy, setAccuracy] = useState(0); // 정확도
+  const [wpm, setWpm] = useState(0); // WPM (타자 속도)
 
   // GitHub API에서 lodash 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async () => {
@@ -95,17 +97,31 @@ function TypingArea() {
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     setUserInput(inputValue);
-    const cleanedCodeToType = codeToType.replace(/\s+/g, " ").trim();
     if (!startTime) {
       setStartTime(new Date().getTime()); // 첫 입력 시 타이머 시작
     }
-    if (
-      userInput.length - 1 >= cleanedCodeToType.length &&
-      userInput.length > 0
-    ) {
-      setIsFinished(true);
-    }
   };
+
+  // 타이핑 완료 및 정확도, WPM 계산
+  useEffect(() => {
+    const cleanedCodeToType = codeToType.replace(/\s+/g, " ").trim();
+
+    if (userInput.length >= cleanedCodeToType.length && userInput.length > 0) {
+      const endTime = new Date().getTime();
+      setIsFinished(true);
+
+      const timeTaken = (endTime - startTime) / 1000 / 60; // 분 단위 시간
+      const correctChars = userInput
+        .split("")
+        .filter((char, index) => char === cleanedCodeToType[index]).length;
+
+      // 정확도 계산
+      setAccuracy(((correctChars / cleanedCodeToType.length) * 100).toFixed(2));
+
+      // 총 입력한 글자 수 기준 WPM 계산
+      setWpm((userInput.length / 5 / timeTaken).toFixed(2)); // 5글자 = 1 단어 기준
+    }
+  }, [userInput, codeToType, startTime]);
   /******************************************************************** */
   const renderCode = () => {
     const cleanedCodeToType = codeToType.replace(/\s+/g, " ");
@@ -185,7 +201,12 @@ function TypingArea() {
       />
       <div>
         <p>소요 시간: {currentTime} 초</p>
-        {isFinished && <p>타이핑 완료!</p>}
+        {isFinished && (
+          <>
+            <p>타이핑 완료!</p> <p>정확도: {accuracy}%</p>
+            <p>속도: {wpm} WPM</p>
+          </>
+        )}
       </div>
     </div>
   );
