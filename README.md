@@ -54,4 +54,4 @@ GitHub에서 랜덤으로 선택한 JavaScript 함수 코드를 가져와 사용
 
 ## 연락처
 
-프로젝트에 대한 문의 사항은 [이메일](maplesyrup0423@naver.com)로 연락해 주세요.
+프로젝트에 대한 문의 사항은 maplesyrup0423@naver.com로 연락해 주세요.
