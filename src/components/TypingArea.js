@@ -11,6 +11,7 @@ function TypingArea() {
   const timerRef = useRef(null); // useRef로 타이머 변수 선언
   const [accuracy, setAccuracy] = useState(0); // 정확도
   const [wpm, setWpm] = useState(0); // WPM (타자 속도)
+  const [isPaused, setIsPaused] = useState(false); // 일시 정지 상태
 
   // GitHub API에서 lodash 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async () => {
@@ -172,6 +173,11 @@ function TypingArea() {
 
   /******************************************************************** */
   useEffect(() => {
+    if (isPaused) {
+      clearInterval(timerRef.current); // 일시 정지 상태일 때 타이머 멈춤
+      return; // 아무 것도 하지 않음
+    }
+
     // 타이머가 작동 중일 때
     if (startTime && !isFinished) {
       timerRef.current = setInterval(() => {
@@ -183,9 +189,19 @@ function TypingArea() {
     }
 
     return () => clearInterval(timerRef.current);
-  }, [startTime, isFinished]);
+  }, [startTime, isFinished, isPaused]);
+  const togglePause = () => {
+    setIsPaused((prev) => !prev); // 일시 정지 상태 토글
+  };
   /******************************************************************** */
-
+  const refreshCodeSnippet = () => {
+    setUserInput(""); // 텍스트 영역 초기화
+    setIsFinished(false); // 타이핑 완료 상태 초기화
+    setCurrentTime(0); // 타이머 초기화
+    setStartTime(null); // 타이머 시작 시간 초기화
+    fetchJSFilesFromGithub(); // 새로고침 시 새로운 코드 스니펫을 가져옴
+  };
+  /******************************************************************** */
   return (
     <div className="typing-area">
       <h2>타자 연습</h2>
@@ -197,16 +213,20 @@ function TypingArea() {
         onKeyDown={handleKeyDown}
         autoComplete="off" // 자동 완성 비활성화
         spellCheck="false" // 맞춤법 검사 비활성화
-        disabled={isFinished}
+        disabled={isPaused || isFinished}
       />
       <div>
         <p>소요 시간: {currentTime} 초</p>
+        <button onClick={togglePause}>
+          {isPaused ? "타이머 시작" : "타이머 일시 정지"}
+        </button>
         {isFinished && (
           <>
             <p>타이핑 완료!</p> <p>정확도: {accuracy}%</p>
             <p>속도: {wpm} WPM</p>
           </>
         )}
+        <button onClick={refreshCodeSnippet}>새로고침</button>
       </div>
     </div>
   );
