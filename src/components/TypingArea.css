@@ -1,0 +1,37 @@
+body {
+  background-color: black;
+  color: white;
+}
+.typing-area {
+  width: 600px;
+  margin: auto;
+  margin-top: 150px;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  padding: 20px;
+}
+h2 {
+  text-align: center;
+}
+.code-container {
+  margin-bottom: 10px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 25px;
+  border: 1px solid #4caf50;
+  color: lightgray;
+  padding: 20px;
+  border-radius: 8px;
+  padding: 10px;
+}
+textarea {
+  width: 600px;
+  background-color: black;
+  color: white;
+  border: 1px solid #4caf50;
+  font-size: 15px;
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+  resize: none;
+  outline: none;
+}
