@@ -2,7 +2,7 @@
 ![image](https://github.com/user-attachments/assets/1fd1af3e-dbb9-4073-8ffe-f503d44c43cd)
 
 이 프로젝트는 사용자가 코드를 따라 입력하며 타자 연습을 할 수 있는 웹 애플리케이션입니다.
-GitHub에서 랜덤으로 선택한 JavaScript 함수 코드를 가져와 사용자에게 보여주고, 입력한 내용을 비교하여 정확도 및 WPM(분당 타자 수)을 계산합니다.
+GitHub에서 랜덤으로 선택한 JavaScript 코드를 가져와 사용자에게 보여주고, 입력한 내용을 비교하여 정확도 및 WPM(분당 타자 수)을 계산합니다.
 
 ## 주요 기능
 
