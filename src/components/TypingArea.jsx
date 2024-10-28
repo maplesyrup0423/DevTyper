@@ -14,9 +14,14 @@ function TypingArea() {
   const [isPaused, setIsPaused] = useState(false); // 일시 정지 상태
   const textareaRef = useRef(null); // textarea 참조 추가
   const [selectedPattern, setSelectedPattern] = useState("function"); // 기본값을 "function"으로 설정
+  const [isFetching, setIsFetching] = useState(false); // API 요청 중 여부
+  const fetchDelay = 2000; // 요청 간격 (2초)
 
   // GitHub API에서 여러 레포지토리의 .js 파일을 가져오는 함수
-  const fetchJSFilesFromGithub = async () => {
+  const fetchJSFilesFromGithub = async (retryCount = 3) => {
+    if (isFetching) return; // 이미 요청 중이라면 중단
+
+    setIsFetching(true); // 요청 시작
     const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
     const repositories = [
       "lodash/lodash", // Lodash 레포지토리
@@ -36,6 +41,7 @@ function TypingArea() {
     ];
     const randomRepo =
       repositories[Math.floor(Math.random() * repositories.length)];
+    console.log("randomRepo : ", randomRepo);
     const query = "extension:js"; // .js 파일 검색 쿼리
 
     try {
@@ -49,6 +55,10 @@ function TypingArea() {
       );
       if (!response.ok) {
         console.log(`${randomRepo}의 GitHub API 요청 실패: ${response.status}`);
+        if (response.status === 403) {
+          console.error("API 요청이 금지되었습니다. 잠시 후 다시 시도합니다.");
+          return; // 403 오류가 발생했을 때 더 이상 요청하지 않음
+        }
         return; // 요청 실패 시 함수 종료
       }
 
@@ -56,17 +66,26 @@ function TypingArea() {
       if (data.items.length > 0) {
         const randomItem =
           data.items[Math.floor(Math.random() * data.items.length)];
+        console.log("randomItem : ", randomItem);
         await fetchCodeSnippet(randomItem); // 랜덤 파일의 코드 스니펫 가져오기
       } else {
         console.log(`${randomRepo}에 적합한 파일이 없습니다.`);
+        if (retryCount > 0) {
+          console.log("재시도 중...");
+          await new Promise((resolve) => setTimeout(resolve, fetchDelay)); // 2초 대기 후 재시도
+          await fetchJSFilesFromGithub(retryCount - 1);
+        }
       }
     } catch (error) {
       console.error("에러 발생:", error.message);
+    } finally {
+      setIsFetching(false); // 요청 완료 후 상태 리셋
     }
   };
-
   // GitHub에서 특정 파일의 코드 스니펫을 가져오는 함수
   const fetchCodeSnippet = async (item) => {
+    if (isFetching) return; // 이미 요청 중이라면 중단
+    setIsFetching(true); // 요청 시작
     try {
       const response = await fetch(item.url, {
         headers: {
@@ -96,14 +115,22 @@ function TypingArea() {
             object: /const\s+\w+\s*=\s*{[^}]*}/g,
           };
 
-          // 모든 패턴을 적용하여 코드 조각을 가져옴
-          let allMatches = [];
-          for (const pattern of Object.values(regexPatterns)) {
+          // 모든 패턴에 대해 독립적인 allMatches 배열을 사용
+          const allMatches = []; // 여기를 루프 외부에서 정의함
+
+          // 각 패턴에 대해 반복
+          for (const [key, pattern] of Object.entries(regexPatterns)) {
             const matches = decodedContent.match(pattern) || [];
-            allMatches = allMatches.concat(matches);
+
+            // 각 패턴에 대해 중첩된 블록을 추출
+            matches.forEach((match) => {
+              const nestedBlocks = extractNestedBlocks(match);
+              allMatches.push(...nestedBlocks); // 중첩된 블록을 allMatches에 추가
+            });
           }
 
           if (allMatches.length > 0) {
+            console.log("allMatches : ", allMatches);
             // 랜덤으로 하나의 코드 조각 선택
             const randomSnippet =
               allMatches[Math.floor(Math.random() * allMatches.length)];
@@ -111,17 +138,48 @@ function TypingArea() {
             setFileLink(item.html_url); // 파일 출처 링크 설정
           } else {
             console.log("파일에 코드 조각이 없습니다. 다시 시도합니다.");
-            fetchJSFilesFromGithub(); // 코드 조각이 없으면 다시 파일을 가져옵니다.
+            setTimeout(() => {
+              setIsFetching(false); // 요청 완료 후 상태 리셋
+              fetchJSFilesFromGithub(); // 코드 조각이 없으면 다시 파일을 가져옵니다.
+            }, fetchDelay);
           }
         } catch (decodeError) {
           console.error("Base64 디코딩 에러:", decodeError.message);
+          setIsFetching(false); // 요청 완료 후 상태 리셋
         }
       } else {
         console.log("코드 콘텐츠가 없습니다.");
+        setIsFetching(false); // 요청 완료 후 상태 리셋
       }
     } catch (error) {
       console.error("코드 스니펫 에러:", error.message);
+      setIsFetching(false); // 요청 완료 후 상태 리셋
     }
+  };
+
+  // 중첩된 중괄호를 처리하는 함수
+  const extractNestedBlocks = (code) => {
+    const blocks = []; // 추출된 블록을 저장할 배열
+    const stack = []; // 중괄호를 추적할 스택
+    let currentBlock = ""; // 현재 블록을 저장할 변수
+
+    for (let char of code) {
+      currentBlock += char; // 현재 블록에 문자 추가
+
+      if (char === "{") {
+        stack.push(char); // 열린 중괄호를 스택에 추가
+      } else if (char === "}") {
+        stack.pop(); // 닫힌 중괄호는 스택에서 제거
+
+        // 모든 중괄호가 닫혔다면
+        if (stack.length === 0) {
+          blocks.push(currentBlock); // 완전한 블록을 배열에 추가
+          currentBlock = ""; // 현재 블록 초기화
+        }
+      }
+    }
+
+    return blocks; // 추출된 블록 반환
   };
 
   useEffect(() => {

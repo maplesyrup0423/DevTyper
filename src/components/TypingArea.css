@@ -35,6 +35,8 @@ h2 {
   padding: 10px;
   user-select: none;
   box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
 }
 .code-container * {
   pointer-events: none;
