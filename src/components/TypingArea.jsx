@@ -13,6 +13,7 @@ function TypingArea() {
   const [wpm, setWpm] = useState(0); // WPM (타자 속도)
   const [isPaused, setIsPaused] = useState(false); // 일시 정지 상태
   const textareaRef = useRef(null); // textarea 참조 추가
+  const [selectedPattern, setSelectedPattern] = useState("function"); // 기본값을 "function"으로 설정
 
   // GitHub API에서 lodash 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async () => {
@@ -64,23 +65,36 @@ function TypingArea() {
 
       // Base64로 인코딩된 코드가 있는지 확인
       if (codeData.content) {
-        // Base64 디코딩을 시도합니다.
         try {
           const decodedContent = atob(codeData.content); // Base64로 인코딩된 코드를 디코딩
 
-          // 함수만 필터링하는 로직
-          const functionRegex = /function\s+\w+\s*\(.*?\)\s*{[^}]*}/g; // 함수 정의를 찾는 정규 표현식
-          const functions = decodedContent.match(functionRegex) || []; // 일치하는 함수들을 배열로 가져옴
+          // 정규 표현식 패턴 정의
+          const regexPatterns = {
+            function: /function\s+\w+\s*\(.*?\)\s*{[^}]*}/g,
+            class: /class\s+\w+\s*{[^}]*}/g,
+            arrow: /\w+\s*=\s*\(.*?\)\s*=>\s*{[^}]*}/g,
+            async: /async\s+function\s+\w+\s*\(.*?\)\s*{[^}]*}/g,
+            loop: /\b(for|while)\s*\(.*?\)\s*{[^}]*}/g,
+            conditional: /\b(if|switch)\s*\(.*?\)\s*{[^}]*}/g,
+            object: /const\s+\w+\s*=\s*{[^}]*}/g,
+          };
 
-          if (functions.length > 0) {
-            // 랜덤으로 하나의 함수 선택
-            const randomFunction =
-              functions[Math.floor(Math.random() * functions.length)];
-            setCodeToType(randomFunction); // 선택한 함수 설정
+          // 모든 패턴을 적용하여 코드 조각을 가져옴
+          let allMatches = [];
+          for (const pattern of Object.values(regexPatterns)) {
+            const matches = decodedContent.match(pattern) || [];
+            allMatches = allMatches.concat(matches);
+          }
+
+          if (allMatches.length > 0) {
+            // 랜덤으로 하나의 코드 조각 선택
+            const randomSnippet =
+              allMatches[Math.floor(Math.random() * allMatches.length)];
+            setCodeToType(randomSnippet); // 선택한 코드 조각 설정
             setFileLink(item.html_url); // 파일 출처 링크 설정
           } else {
-            console.log("파일에 함수가 없습니다. 다시 시도합니다.");
-            fetchJSFilesFromGithub(); // 함수가 없으면 다시 파일을 가져옵니다.
+            console.log("파일에 코드 조각이 없습니다. 다시 시도합니다.");
+            fetchJSFilesFromGithub(); // 코드 조각이 없으면 다시 파일을 가져옵니다.
           }
         } catch (decodeError) {
           console.error("Base64 디코딩 에러:", decodeError.message);
@@ -92,6 +106,7 @@ function TypingArea() {
       console.error("코드 스니펫 에러:", error.message);
     }
   };
+
   useEffect(() => {
     fetchJSFilesFromGithub(); // 컴포넌트가 처음 렌더링될 때 .js 파일을 가져옵니다.
   }, []);
