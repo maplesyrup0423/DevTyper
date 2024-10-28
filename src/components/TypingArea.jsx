@@ -15,33 +15,50 @@ function TypingArea() {
   const textareaRef = useRef(null); // textarea 참조 추가
   const [selectedPattern, setSelectedPattern] = useState("function"); // 기본값을 "function"으로 설정
 
-  // GitHub API에서 lodash 레포지토리의 .js 파일을 가져오는 함수
+  // GitHub API에서 여러 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async () => {
     const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+    const repositories = [
+      "lodash/lodash", // Lodash 레포지토리
+      "axios/axios", // Axios 레포지토리
+      "facebook/react", // React 레포지토리
+      "ramda/ramda", // Ramda 레포지토리
+      "jquery/jquery", // jQuery 레포지토리
+      "mrdoob/three.js", // Three.js 레포지토리
+      "d3/d3", // D3.js 레포지토리
+      "chartjs/Chart.js", // Chart.js 레포지토리
+      "expressjs/express", // Express 레포지토리
+      "angular/angular", // Angular 레포지토리
+      "vuejs/vue", // Vue.js 레포지토리
+      "airbnb/lottie-web", // Lottie-web 레포지토리
+      "vercel/next.js", // Next.js 레포지토리
+      "socketio/socket.io", // Socket.IO 레포지토리
+    ];
+    const randomRepo =
+      repositories[Math.floor(Math.random() * repositories.length)];
+    const query = "extension:js"; // .js 파일 검색 쿼리
 
     try {
-      const repo = "lodash/lodash"; // 특정 레포지토리
-      const query = "extension:js"; // .js 파일 검색 쿼리
       const response = await fetch(
-        `https://api.github.com/search/code?q=${query}+repo:${repo}`,
+        `https://api.github.com/search/code?q=${query}+repo:${randomRepo}`,
         {
           headers: {
             Authorization: `token ${GITHUB_TOKEN}`, // 토큰을 인증 헤더에 추가
           },
         }
       );
-
       if (!response.ok) {
-        throw new Error(`GitHub API 요청 실패: ${response.status}`);
+        console.log(`${randomRepo}의 GitHub API 요청 실패: ${response.status}`);
+        return; // 요청 실패 시 함수 종료
       }
 
       const data = await response.json();
       if (data.items.length > 0) {
         const randomItem =
           data.items[Math.floor(Math.random() * data.items.length)];
-        fetchCodeSnippet(randomItem); // 랜덤 파일의 코드 스니펫 가져오기
+        await fetchCodeSnippet(randomItem); // 랜덤 파일의 코드 스니펫 가져오기
       } else {
-        console.log("크기가 적합한 파일이 없습니다.");
+        console.log(`${randomRepo}에 적합한 파일이 없습니다.`);
       }
     } catch (error) {
       console.error("에러 발생:", error.message);

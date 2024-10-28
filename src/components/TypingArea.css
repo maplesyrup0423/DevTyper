@@ -31,10 +31,10 @@ h2 {
   font-size: 25px;
   border: 1px solid #4caf50;
   color: lightgray;
-  padding: 20px;
   border-radius: 10px;
   padding: 10px;
   user-select: none;
+  box-sizing: border-box;
 }
 .code-container * {
   pointer-events: none;
