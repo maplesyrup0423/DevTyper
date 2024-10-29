@@ -84,8 +84,7 @@ GitHub에서 랜덤으로 선택한 JavaScript 코드를 가져와 사용자에�
 - [**2. GitHub API 연동하기**](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-3-GitHub-API)  
   랜덤 JavaScript 코드를 가져오기 위해 GitHub API를 연동한 과정입니다.
 
-- [**3. 타이머** ](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-4-GitHub-API)
-- [**정확도, WPM 계산**](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-5-%EC%A0%95%ED%99%95%EB%8F%84-WPM-%EA%B3%84%EC%82%B0)
+- [**3. 타이머** ](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-4-GitHub-API) || [**정확도, WPM 계산**](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-5-%EC%A0%95%ED%99%95%EB%8F%84-WPM-%EA%B3%84%EC%82%B0)
   사용자 타이핑 속도를 측정하기 위한 타이머와 WPM 계산 로직을 구현한 과정입니다.
 
 - [**4. 타자 연습 기록 기능 추가**](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-14-%ED%83%80%EC%9E%90%EC%97%B0%EC%8A%B5-%EB%A1%9C%EA%B7%B8-%EB%82%A8%EA%B8%B0%EA%B8%B0)  
