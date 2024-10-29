@@ -1,7 +1,7 @@
 # 타자 연습 웹 애플리케이션
 ![devtyper-1028](https://github.com/user-attachments/assets/6f0b19e9-61b5-4902-b03b-f0c03260e782)
 
-타자연습 기록 (로컬스토리지 사용)
+
 ![image](https://github.com/user-attachments/assets/f855bbca-2ddc-4c8d-b27f-3b3a73ce09f4)
 
 
