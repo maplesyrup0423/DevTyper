@@ -16,6 +16,7 @@ function TypingArea() {
   const [selectedPattern, setSelectedPattern] = useState("function"); // 기본값을 "function"으로 설정
   const [isFetching, setIsFetching] = useState(false); // API 요청 중 여부
   const fetchDelay = 2000; // 요청 간격 (2초)
+  const [typingRecords, setTypingRecords] = useState([]); //로컬 스토리지에서 기록
 
   // GitHub API에서 여러 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async (retryCount = 3) => {
@@ -181,10 +182,21 @@ function TypingArea() {
 
     return blocks; // 추출된 블록 반환
   };
-
+  //컴포넌트가 마운트될 때 로컬 스토리지에서 기록을 불러옴
   useEffect(() => {
     fetchJSFilesFromGithub(); // 컴포넌트가 처음 렌더링될 때 .js 파일을 가져옵니다.
+    const storedRecords =
+      JSON.parse(localStorage.getItem("typingRecords")) || [];
+    setTypingRecords(storedRecords);
   }, []);
+  /******************************************************************** */
+  useEffect(() => {
+    if (isFinished) {
+      const storedRecords =
+        JSON.parse(localStorage.getItem("typingRecords")) || [];
+      setTypingRecords(storedRecords); // 갱신된 기록 설정
+    }
+  }, [isFinished]);
   /******************************************************************** */
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -210,10 +222,18 @@ function TypingArea() {
         .filter((char, index) => char === cleanedCodeToType[index]).length;
 
       // 정확도 계산
-      setAccuracy(((correctChars / cleanedCodeToType.length) * 100).toFixed(2));
+      const accuracy = (
+        (correctChars / cleanedCodeToType.length) *
+        100
+      ).toFixed(2);
+      setAccuracy(accuracy);
 
       // 총 입력한 글자 수 기준 WPM 계산
-      setWpm((userInput.length / 5 / timeTaken).toFixed(2)); // 5글자 = 1 단어 기준
+      const wpm = (userInput.length / 5 / (timeTaken / 60)).toFixed(2); // 5글자 = 1 단어 기준
+      setWpm(wpm);
+
+      // 기록을 로컬 스토리지에 저장
+      saveTypingRecord(timeTaken.toFixed(1), accuracy, wpm);
     }
   }, [userInput, codeToType, startTime]);
   /******************************************************************** */
@@ -304,52 +324,87 @@ function TypingArea() {
     }
   };
   /******************************************************************** */
-  return (
-    <div className="typing-area">
-      <h2>타자 연습</h2>
-      <div className="refreshCodeSnippet">
-        {fileLink && (
-          <span>
-            <a href={fileLink} target="_blank" rel="noopener noreferrer">
-              코드 출처
-            </a>
-          </span>
-        )}
-        <button onClick={refreshCodeSnippet}>새로고침</button>
-      </div>
+  const saveTypingRecord = (time, accuracy, wpm) => {
+    const completedAt = new Date().toLocaleString(); // 완료된 시간
+    const record = { completedAt, time, accuracy, wpm };
 
-      <div className="code-container">{renderCode()}</div>
-      <textarea
-        placeholder="코드를 따라 입력하세요"
-        value={userInput}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        autoComplete="off" // 자동 완성 비활성화
-        spellCheck="false" // 맞춤법 검사 비활성화
-        disabled={isPaused || isFinished}
-        ref={textareaRef}
-      />
-      <div className="footer">
-        {!isFinished && currentTime > 0 && (
-          <>
+    // 기존 기록을 가져와 배열로 저장하거나 빈 배열로 초기화
+    const storedRecords =
+      JSON.parse(localStorage.getItem("typingRecords")) || [];
+    storedRecords.push(record);
+
+    // 로컬 스토리지에 갱신된 기록 저장
+    localStorage.setItem("typingRecords", JSON.stringify(storedRecords));
+  };
+  /******************************************************************** */
+  return (
+    <>
+      <div className="typing-area">
+        <h2>타자 연습</h2>
+        <div className="refreshCodeSnippet">
+          {fileLink && (
+            <span>
+              <a href={fileLink} target="_blank" rel="noopener noreferrer">
+                코드 출처
+              </a>
+            </span>
+          )}
+          <button onClick={refreshCodeSnippet}>새로고침</button>
+        </div>
+
+        <div className="code-container">{renderCode()}</div>
+        <textarea
+          placeholder="코드를 따라 입력하세요"
+          value={userInput}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          autoComplete="off" // 자동 완성 비활성화
+          spellCheck="false" // 맞춤법 검사 비활성화
+          disabled={isPaused || isFinished}
+          ref={textareaRef}
+        />
+        <div className="footer">
+          {!isFinished && currentTime > 0 && (
+            <>
+              <div>
+                <p>소요 시간: {currentTime} 초</p>
+              </div>
+              <button onClick={togglePause}>
+                {isPaused ? "타이머 시작" : "타이머 일시 정지"}
+              </button>
+            </>
+          )}
+
+          {isFinished && (
             <div>
               <p>소요 시간: {currentTime} 초</p>
+              <p>정확도: {accuracy}%</p>
+              <p>속도: {wpm} WPM</p>
             </div>
-            <button onClick={togglePause}>
-              {isPaused ? "타이머 시작" : "타이머 일시 정지"}
-            </button>
-          </>
-        )}
-
-        {isFinished && (
+          )}
+        </div>
+      </div>
+      {/* 저장된 기록 표시 */}
+      <div className="typing-records">
+        <h3>타자 연습 기록</h3>
+        {typingRecords.length > 0 ? (
           <div>
-            <p>소요 시간: {currentTime} 초</p>
-            <p>정확도: {accuracy}%</p>
-            <p>속도: {wpm} WPM</p>
+            {typingRecords.map((record, index) => (
+              <div key={index} className="typingRecords">
+                <p>완료 시간: {record.completedAt}</p>
+                <span>소요 시간: {record.time} 초</span>
+                &nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;
+                <span>정확도: {record.accuracy}%</span>
+                &nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;
+                <span>속도: {record.wpm} WPM</span>
+              </div>
+            ))}
           </div>
+        ) : (
+          <p>기록이 없습니다.</p>
         )}
       </div>
-    </div>
+    </>
   );
 }
 

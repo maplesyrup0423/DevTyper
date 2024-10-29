@@ -82,3 +82,41 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.typing-records {
+  width: 600px;
+  height: 500px;
+  overflow: auto;
+  margin: auto;
+  margin-top: 20px;
+  border: 2px solid #ffcd19;
+  border-radius: 10px;
+  padding: 20px;
+}
+/* 스크롤바 스타일 */
+.typing-records::-webkit-scrollbar {
+  width: 10px; /* 스크롤바의 너비 */
+}
+
+.typing-records::-webkit-scrollbar-track {
+  background: none; /* 스크롤바 트랙 색상 */
+}
+
+.typing-records::-webkit-scrollbar-thumb {
+  background: #ddb72d; /* 스크롤바 색상 */
+  border-radius: 10px; /* 모서리 둥글게 */
+}
+
+.typing-records::-webkit-scrollbar-thumb:hover {
+  background: #8d782d; /* 스크롤바 호버 시 색상 */
+}
+
+.typing-records h3 {
+  text-align: center;
+}
+
+.typingRecords {
+  padding: 10px;
+  border: 2px solid #ffcd19;
+  margin-top: 5px;
+}
