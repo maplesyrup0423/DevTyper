@@ -64,3 +64,32 @@ GitHub에서 랜덤으로 선택한 JavaScript 코드를 가져와 사용자에�
 
 프로젝트에 대한 문의 사항은 maplesyrup0423@naver.com로 연락해 주세요.
 
+## 코딩 과정
+
+타자 연습 웹 애플리케이션 제작 과정을 [Velog 시리즈](https://velog.io/@maplesyrup0423/series/%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0)로 작성했습니다.
+
+### 📑 시리즈 소개
+- **제목**: 코딩 타자 연습 사이트 만들기
+- **목적**: 사용자들이 JavaScript 코드를 통해 타자 실력을 향상할 수 있는 웹 애플리케이션 제작기
+- **주요 내용**:
+  - 프로젝트 초기 설정 및 기능 기획
+  - GitHub API 연동을 통한 코드 데이터 불러오기
+  - 타이머 및 WPM(분당 타수) 계산 기능 구현
+  - 로컬 스토리지 활용하여 타자 연습 기록 저장
+
+### 📚 주요 게시글 목록
+- [**1. 프로젝트 기획**](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-%EA%B8%B0%ED%9A%8D)  
+  타자 연습 웹 애플리케이션의 기획 및 주요 기능을 설계한 과정입니다.
+
+- [**2. GitHub API 연동하기**](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-3-GitHub-API)  
+  랜덤 JavaScript 코드를 가져오기 위해 GitHub API를 연동한 과정입니다.
+
+- [**3. 타이머 ](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-4-GitHub-API)  [*정확도, WPM 계산*](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-5-%EC%A0%95%ED%99%95%EB%8F%84-WPM-%EA%B3%84%EC%82%B0)
+  사용자 타이핑 속도를 측정하기 위한 타이머와 WPM 계산 로직을 구현한 과정입니다.
+
+- [**4. 타자 연습 기록 기능 추가**](https://velog.io/@maplesyrup0423/React-%EC%BD%94%EB%94%A9-%ED%83%80%EC%9E%90-%EC%97%B0%EC%8A%B5-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-14-%ED%83%80%EC%9E%90%EC%97%B0%EC%8A%B5-%EB%A1%9C%EA%B7%B8-%EB%82%A8%EA%B8%B0%EA%B8%B0)  
+  로컬 스토리지를 이용하여 타자 연습 기록을 저장하고 조회하는 기능을 추가한 과정입니다.
+
+이 외에도 다양한 개발 과정과 트러블슈팅 내용들이 시리즈에 포함되어 있으니, 흥미가 있으신 분들은 방문하여 확인해보세요! 😊
+
+
