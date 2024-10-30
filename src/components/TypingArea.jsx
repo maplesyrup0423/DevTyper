@@ -14,7 +14,6 @@ function TypingArea() {
   const [wpm, setWpm] = useState(0); // WPM (타자 속도)
   const [isPaused, setIsPaused] = useState(false); // 일시 정지 상태
   const textareaRef = useRef(null); // textarea 참조 추가
-  const [selectedPattern, setSelectedPattern] = useState("function"); // 기본값을 "function"으로 설정
   const [isFetching, setIsFetching] = useState(false); // API 요청 중 여부
   const fetchDelay = 2000; // 요청 간격 (2초)
   const [typingRecords, setTypingRecords] = useState([]); //로컬 스토리지에서 기록
@@ -45,7 +44,7 @@ function TypingArea() {
     ];
     const randomRepo =
       repositories[Math.floor(Math.random() * repositories.length)];
-    console.log("randomRepo : ", randomRepo);
+    // console.log("randomRepo : ", randomRepo);
     const query = "extension:js"; // .js 파일 검색 쿼리
 
     try {
@@ -135,6 +134,7 @@ function TypingArea() {
           const allMatches = []; // 여기를 루프 외부에서 정의함
 
           // 각 패턴에 대해 반복
+          // eslint-disable-next-line no-unused-vars
           for (const [key, pattern] of Object.entries(regexPatterns)) {
             const matches = decodedContent.match(pattern) || [];
 
@@ -144,9 +144,8 @@ function TypingArea() {
               allMatches.push(...nestedBlocks); // 중첩된 블록을 allMatches에 추가
             });
           }
-
           if (allMatches.length > 0) {
-            console.log("allMatches : ", allMatches);
+            // console.log("allMatches : ", allMatches);
             // 랜덤으로 하나의 코드 조각 선택
             const randomSnippet =
               allMatches[Math.floor(Math.random() * allMatches.length)];
@@ -203,6 +202,7 @@ function TypingArea() {
     const storedRecords =
       JSON.parse(localStorage.getItem("typingRecords")) || [];
     setTypingRecords(storedRecords);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   /******************************************************************** */
   useEffect(() => {
