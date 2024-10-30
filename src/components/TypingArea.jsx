@@ -17,6 +17,7 @@ function TypingArea() {
   const [isFetching, setIsFetching] = useState(false); // API 요청 중 여부
   const fetchDelay = 2000; // 요청 간격 (2초)
   const [typingRecords, setTypingRecords] = useState([]); //로컬 스토리지에서 기록
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 추가
 
   // GitHub API에서 여러 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async (retryCount = 3) => {
@@ -234,6 +235,9 @@ function TypingArea() {
 
       // 기록을 로컬 스토리지에 저장
       saveTypingRecord(timeTaken.toFixed(1), accuracy, wpm);
+
+      // 타이핑 완료 시 모달 열기
+      setIsModalOpen(true);
     }
   }, [userInput, codeToType, startTime]);
   /******************************************************************** */
@@ -337,6 +341,11 @@ function TypingArea() {
     localStorage.setItem("typingRecords", JSON.stringify(storedRecords));
   };
   /******************************************************************** */
+
+  const closeModal = () => {
+    setIsModalOpen(false); // 모달 닫기 함수
+  };
+  /******************************************************************** */
   return (
     <>
       <div className="typing-area">
@@ -374,14 +383,6 @@ function TypingArea() {
               </button>
             </>
           )}
-
-          {isFinished && (
-            <div>
-              <p>소요 시간: {currentTime} 초</p>
-              <p>정확도: {accuracy}%</p>
-              <p>속도: {wpm} WPM</p>
-            </div>
-          )}
         </div>
       </div>
       {/* 저장된 기록 표시 */}
@@ -404,6 +405,27 @@ function TypingArea() {
           <p>기록이 없습니다.</p>
         )}
       </div>
+      {/* 타이핑 완료 모달 */}
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <p>소요 시간: {currentTime} 초</p>
+            <p>정확도: {accuracy}%</p>
+            <p>속도: {wpm} WPM</p>
+            <button
+              onClick={() => {
+                refreshCodeSnippet();
+                closeModal();
+              }}
+            >
+              다음
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
