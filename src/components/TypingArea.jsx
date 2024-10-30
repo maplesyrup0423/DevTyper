@@ -248,10 +248,9 @@ function TypingArea() {
         // timeTaken이 0보다 클 때만 WPM 계산
         const wpm = (userInput.length / 5 / timeTaken).toFixed(2); // 시간은 분 단위로 가정
         setWpm(wpm);
+        // 기록을 로컬 스토리지에 저장
+        saveTypingRecord(timeTaken.toFixed(1), accuracy, wpm);
       }
-
-      // 기록을 로컬 스토리지에 저장
-      saveTypingRecord(timeTaken.toFixed(1), accuracy, wpm);
 
       // 타이핑 완료 시 모달 열기
       setIsModalOpen(true);
