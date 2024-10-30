@@ -4,8 +4,9 @@
 
 ![image](https://github.com/user-attachments/assets/f855bbca-2ddc-4c8d-b27f-3b3a73ce09f4)
 
+![image](https://github.com/user-attachments/assets/cea26c5b-a454-41b7-a6cb-fade76f3fc79)
 
-
+(결과 출력 방식 modal 변경)
 
 ## 프로젝트 개요
 - **프로젝트명**: DevTyper
