@@ -375,7 +375,16 @@ function TypingArea() {
           <button onClick={refreshCodeSnippet}>새로고침</button>
         </div>
 
-        <div className="code-container">{renderCode()}</div>
+        <div className="code-container">
+          {isFetching ? (
+            <div className="loading-text">
+              <div className="spinner"></div>
+              <span>코드 가져오는 중...</span>
+            </div>
+          ) : (
+            renderCode()
+          )}
+        </div>
         <textarea
           placeholder="코드를 따라 입력하세요"
           value={userInput}
