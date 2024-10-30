@@ -410,9 +410,10 @@ function TypingArea() {
         </div>
       </div>
       {/* 저장된 기록 표시 */}
-      <div className="typing-records">
-        <h3>타자 연습 기록</h3>
-        {typingRecords.length > 0 ? (
+
+      {typingRecords.length > 0 && (
+        <div className="typing-records">
+          <h3>타자 연습 기록</h3>
           <div>
             {typingRecords.map((record, index) => (
               <div key={index} className="typingRecords">
@@ -425,10 +426,9 @@ function TypingArea() {
               </div>
             ))}
           </div>
-        ) : (
-          <p>기록이 없습니다.</p>
-        )}
-      </div>
+        </div>
+      )}
+
       {/* 타이핑 완료 모달 */}
       {isModalOpen && (
         <div className="modal">
