@@ -244,8 +244,11 @@ function TypingArea() {
       setAccuracy(accuracy);
 
       // 총 입력한 글자 수 기준 WPM 계산
-      const wpm = (userInput.length / 5 / (timeTaken / 60)).toFixed(2); // 5글자 = 1 단어 기준
-      setWpm(wpm);
+      if (timeTaken > 0) {
+        // timeTaken이 0보다 클 때만 WPM 계산
+        const wpm = (userInput.length / 5 / timeTaken).toFixed(2); // 시간은 분 단위로 가정
+        setWpm(wpm);
+      }
 
       // 기록을 로컬 스토리지에 저장
       saveTypingRecord(timeTaken.toFixed(1), accuracy, wpm);
