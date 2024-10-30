@@ -4,7 +4,8 @@
 
 ![image](https://github.com/user-attachments/assets/f855bbca-2ddc-4c8d-b27f-3b3a73ce09f4)
 
-![image](https://github.com/user-attachments/assets/cea26c5b-a454-41b7-a6cb-fade76f3fc79)
+![image](https://github.com/user-attachments/assets/008796ce-7fa5-4b1a-b710-f75174f3b6a1)
+
 
 (결과 출력 방식 modal 변경)
 
