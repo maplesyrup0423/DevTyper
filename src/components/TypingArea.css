@@ -158,3 +158,11 @@ a:hover {
   font-weight: bold;
   cursor: pointer;
 }
+
+.custom-title {
+  font-size: 20px;
+  color: white;
+}
+.custom-popup {
+  background-color: rgb(54, 54, 54);
+}

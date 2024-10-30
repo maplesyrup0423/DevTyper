@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./TypingArea.css";
+import Swal from "sweetalert2";
 
 function TypingArea() {
   const [userInput, setUserInput] = useState("");
@@ -18,6 +19,7 @@ function TypingArea() {
   const fetchDelay = 2000; // 요청 간격 (2초)
   const [typingRecords, setTypingRecords] = useState([]); //로컬 스토리지에서 기록
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 추가
+  const [isDisabled, setIsDisabled] = useState(false); // 텍스트 영역 비활성화 상태
 
   // GitHub API에서 여러 레포지토리의 .js 파일을 가져오는 함수
   const fetchJSFilesFromGithub = async (retryCount = 3) => {
@@ -59,6 +61,18 @@ function TypingArea() {
         console.log(`${randomRepo}의 GitHub API 요청 실패: ${response.status}`);
         if (response.status === 403) {
           console.error("API 요청이 금지되었습니다. 잠시 후 다시 시도합니다.");
+          Swal.fire({
+            position: "top",
+            icon: "error",
+            title: "잠시 후 다시 시도해주세요",
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+              title: "custom-title",
+              popup: "custom-popup",
+            },
+          });
+          setIsDisabled(true);
           return; // 403 오류가 발생했을 때 더 이상 요청하지 않음
         }
         return; // 요청 실패 시 함수 종료
@@ -369,7 +383,7 @@ function TypingArea() {
           onKeyDown={handleKeyDown}
           autoComplete="off" // 자동 완성 비활성화
           spellCheck="false" // 맞춤법 검사 비활성화
-          disabled={isPaused || isFinished}
+          disabled={isPaused || isFinished || isDisabled}
           ref={textareaRef}
         />
         <div className="footer">
