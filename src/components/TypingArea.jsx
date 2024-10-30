@@ -228,10 +228,9 @@ function TypingArea() {
     const cleanedCodeToType = codeToType.replace(/\s+/g, " ").trim();
 
     if (userInput.length >= cleanedCodeToType.length && userInput.length > 0) {
-      const endTime = new Date().getTime();
       setIsFinished(true);
 
-      const timeTaken = (endTime - startTime) / 1000 / 60; // 분 단위 시간
+      const timeTaken = currentTime / 60;
       const correctChars = userInput
         .split("")
         .filter((char, index) => char === cleanedCodeToType[index]).length;
@@ -249,13 +248,13 @@ function TypingArea() {
         const wpm = (userInput.length / 5 / timeTaken).toFixed(2); // 시간은 분 단위로 가정
         setWpm(wpm);
         // 기록을 로컬 스토리지에 저장
-        saveTypingRecord(timeTaken.toFixed(1), accuracy, wpm);
+        saveTypingRecord(currentTime, accuracy, wpm);
       }
 
       // 타이핑 완료 시 모달 열기
       setIsModalOpen(true);
     }
-  }, [userInput, codeToType, startTime]);
+  }, [userInput, codeToType, startTime, currentTime]);
   /******************************************************************** */
   const renderCode = () => {
     const cleanedCodeToType = codeToType.replace(/\s+/g, " ");
