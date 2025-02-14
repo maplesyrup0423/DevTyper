@@ -4,7 +4,7 @@
 
 ## 완성작 보기
 
-[👉사이트 보러가기]([https://maplesyrup-devtyper.netlify.app/])
+[👉사이트 보러가기](https://maplesyrup-devtyper.netlify.app/)
 
 ![devtyper-1028](https://github.com/user-attachments/assets/6f0b19e9-61b5-4902-b03b-f0c03260e782)
 
